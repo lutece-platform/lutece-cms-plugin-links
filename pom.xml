@@ -33,8 +33,8 @@
 
 	<properties>
 		<componentName>links</componentName>
-		<jiraProjectName>LUTECE</jiraProjectName>
-		<jiraComponentId>10049</jiraComponentId>
+		<jiraProjectName>LINKS</jiraProjectName>
+		<jiraComponentId>10174</jiraComponentId>
 	</properties>
     <scm>
         <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-links</connection>
