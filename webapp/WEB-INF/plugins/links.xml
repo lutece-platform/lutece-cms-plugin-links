@@ -1,16 +1,14 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-
-<plug-in>
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?><plug-in>
 
    <!-- Plugin Informations -->
    <name>links</name>
    <class>fr.paris.lutece.plugins.links.service.LinksPlugin</class>
    <version>2.0.8</version>
    <description>links.plugin.description</description>
-   <documentation></documentation>
-   <installation></installation>
-   <changes></changes>
-   <user-guide></user-guide>
+   <documentation/>
+   <installation/>
+   <changes/>
+   <user-guide/>
    <provider>links.plugin.provider</provider>
    <provider-url>http://lutece.paris.fr</provider-url>
    <icon-url>images/admin/skin/plugins/links/links.png</icon-url>
@@ -50,9 +48,9 @@
        <!-- optional entries -->
        <portlet-create-script-template>/admin/portlet/script_create_portlet.html</portlet-create-script-template>
        <portlet-modify-script-template>/admin/portlet/script_modify_portlet.html</portlet-modify-script-template>
-       <portlet-create-specific-template></portlet-create-specific-template>
-       <portlet-modify-specific-template></portlet-modify-specific-template>
-       <portlet-create-specific-form-template></portlet-create-specific-form-template>
+       <portlet-create-specific-template/>
+       <portlet-modify-specific-template/>
+       <portlet-create-specific-form-template/>
        <portlet-modify-specific-form-template>/admin/plugins/links/modify_portlet_links.html</portlet-modify-specific-form-template>
      </portlet>
    </portlets>
@@ -70,4 +68,3 @@
     </insert-services>
 
 </plug-in>
-
