@@ -218,7 +218,7 @@ public class Link implements XmlContent, AdminWorkgroupResource
         XmlUtil.addElement( strXml, TAG_LINK_ID, strId );
         XmlUtil.addElementHtml( strXml, TAG_LINK_NAME, getName(  ) );
         XmlUtil.addElementHtml( strXml, TAG_LINK_DESCRIPTION, getDescription(  ) );
-        XmlUtil.addElement( strXml, TAG_LINK_DATE, DateUtil.getDateString( getDate(  ) ) );
+        XmlUtil.addElement( strXml, TAG_LINK_DATE, DateUtil.getDateString( getDate(  ), request.getLocale( ) ) );
 
         String strHostKey = AppPathService.getVirtualHostKey( request );
 
