@@ -45,7 +45,7 @@ import java.util.Collection;
 public final class LinkHome
 {
     // Static variable pointed at the DAO instance
-    private static ILinkDAO _dao = (ILinkDAO) SpringContextService.getPluginBean( "links", "linkDAO" );
+    private static ILinkDAO _dao = SpringContextService.getBean( "linkDAO" );
 
     /**
      * Private constructor - this class need not be instantiated
