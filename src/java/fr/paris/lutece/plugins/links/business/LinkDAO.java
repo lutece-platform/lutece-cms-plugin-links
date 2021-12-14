@@ -96,29 +96,30 @@ public final class LinkDAO implements ILinkDAO
         int nNewPrimaryKey = newPrimaryKey(  );
         link.setId( nNewPrimaryKey );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT );
-        daoUtil.setInt( 1, link.getId(  ) );
-        daoUtil.setString( 2, link.getName(  ) );
-        daoUtil.setString( 3, link.getDescription(  ) );
-        daoUtil.setDate( 4, link.getDate(  ) );
-        daoUtil.setString( 5, link.getUrl(  ) );
-        daoUtil.setString( 7, link.getWorkgroupKey(  ) );
-
-        if ( ( link.getImageContent(  ) == null ) )
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT ) )
         {
-            daoUtil.setBytes( 6, null );
-            daoUtil.setString( 8, "" );
+            daoUtil.setInt( 1, link.getId(  ) );
+            daoUtil.setString( 2, link.getName(  ) );
+            daoUtil.setString( 3, link.getDescription(  ) );
+            daoUtil.setDate( 4, link.getDate(  ) );
+            daoUtil.setString( 5, link.getUrl(  ) );
+            daoUtil.setString( 7, link.getWorkgroupKey(  ) );
+    
+            if ( ( link.getImageContent(  ) == null ) )
+            {
+                daoUtil.setBytes( 6, null );
+                daoUtil.setString( 8, "" );
+            }
+            else
+            {
+                daoUtil.setBytes( 6, link.getImageContent(  ) );
+                daoUtil.setString( 8, link.getMimeType(  ) );
+            }
+    
+            daoUtil.executeUpdate(  );
+    
+            insertUrlsList( link );
         }
-        else
-        {
-            daoUtil.setBytes( 6, link.getImageContent(  ) );
-            daoUtil.setString( 8, link.getMimeType(  ) );
-        }
-
-        daoUtil.executeUpdate(  );
-
-        insertUrlsList( link );
-        daoUtil.free(  );
     }
 
     /**
@@ -128,17 +129,17 @@ public final class LinkDAO implements ILinkDAO
      */
     public void delete( int nLinkId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE );
-        daoUtil.setInt( 1, nLinkId );
-
-        daoUtil.executeUpdate(  );
-
-        daoUtil.free(  );
-        daoUtil = new DAOUtil( DELETE_URLS_SQL );
-        daoUtil.setInt( 1, nLinkId );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE ) )
+        {
+            daoUtil.setInt( 1, nLinkId );
+            daoUtil.executeUpdate(  );    
+        }
+        
+        try( DAOUtil daoUtil = new DAOUtil( DELETE_URLS_SQL ) )
+        {
+            daoUtil.setInt( 1, nLinkId );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -150,27 +151,26 @@ public final class LinkDAO implements ILinkDAO
     public Link load( int nLinkId )
     {
         Link link = new Link(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT );
-
-        daoUtil.setInt( 1, nLinkId );
-
-        daoUtil.executeQuery(  );
-
-        if ( daoUtil.next(  ) )
-        {
-            link.setId( nLinkId );
-            link.setName( daoUtil.getString( 1 ) );
-            link.setDescription( daoUtil.getString( 2 ) );
-            link.setDate( daoUtil.getDate( 3 ) );
-            link.setUrl( daoUtil.getString( 4 ) );
-            link.setId( daoUtil.getInt( 5 ) );
-            link.setImageContent( daoUtil.getBytes( 6 ) );
-            link.setWorkgroupKey( daoUtil.getString( 7 ) );
-            link.setMimeType( daoUtil.getString( 8 ) );
-            link.setOptionalUrls( this.selectUrlsList( nLinkId ) );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT ) )
+        {    
+            daoUtil.setInt( 1, nLinkId );
+    
+            daoUtil.executeQuery(  );
+    
+            if ( daoUtil.next(  ) )
+            {
+                link.setId( nLinkId );
+                link.setName( daoUtil.getString( 1 ) );
+                link.setDescription( daoUtil.getString( 2 ) );
+                link.setDate( daoUtil.getDate( 3 ) );
+                link.setUrl( daoUtil.getString( 4 ) );
+                link.setId( daoUtil.getInt( 5 ) );
+                link.setImageContent( daoUtil.getBytes( 6 ) );
+                link.setWorkgroupKey( daoUtil.getString( 7 ) );
+                link.setMimeType( daoUtil.getString( 8 ) );
+                link.setOptionalUrls( this.selectUrlsList( nLinkId ) );
+            }
         }
-
-        daoUtil.free(  );
 
         return link;
     }
@@ -182,28 +182,28 @@ public final class LinkDAO implements ILinkDAO
      */
     public void store( Link link )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE );
-        daoUtil.setString( 1, link.getName(  ) );
-        daoUtil.setString( 2, link.getDescription(  ) );
-        daoUtil.setDate( 3, link.getDate(  ) );
-        daoUtil.setString( 4, link.getUrl(  ) );
-        daoUtil.setBytes( 5, link.getImageContent(  ) );
-        daoUtil.setString( 6, link.getWorkgroupKey(  ) );
-        daoUtil.setString( 7, link.getMimeType(  ) );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE ) )
+        {
+            daoUtil.setString( 1, link.getName(  ) );
+            daoUtil.setString( 2, link.getDescription(  ) );
+            daoUtil.setDate( 3, link.getDate(  ) );
+            daoUtil.setString( 4, link.getUrl(  ) );
+            daoUtil.setBytes( 5, link.getImageContent(  ) );
+            daoUtil.setString( 6, link.getWorkgroupKey(  ) );
+            daoUtil.setString( 7, link.getMimeType(  ) );
+    
+            daoUtil.setInt( 8, link.getId(  ) );
+    
+            daoUtil.executeUpdate(  );
+        }
 
-        daoUtil.setInt( 8, link.getId(  ) );
-
-        daoUtil.executeUpdate(  );
-
-        daoUtil.free(  );
-
-        daoUtil = new DAOUtil( DELETE_URLS_SQL );
-        daoUtil.setInt( 1, link.getId(  ) );
-        daoUtil.executeUpdate(  );
-
-        insertUrlsList( link );
-
-        daoUtil.free(  );
+        try( DAOUtil daoUtil = new DAOUtil( DELETE_URLS_SQL ) )
+        {
+            daoUtil.setInt( 1, link.getId(  ) );
+            daoUtil.executeUpdate(  );
+    
+            insertUrlsList( link );
+        }
     }
 
     /**
@@ -213,20 +213,20 @@ public final class LinkDAO implements ILinkDAO
      */
     public int newPrimaryKey(  )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PRIMARY_KEY );
         int nKey;
-
-        daoUtil.executeQuery(  );
-
-        if ( !daoUtil.next(  ) )
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PRIMARY_KEY ) )
         {
-            // If the table is empty
-            nKey = 1;
+            daoUtil.executeQuery(  );
+    
+            if ( !daoUtil.next(  ) )
+            {
+                // If the table is empty
+                nKey = 1;
+            }
+    
+            nKey = daoUtil.getInt( 1 ) + 1;
         }
-
-        nKey = daoUtil.getInt( 1 ) + 1;
-
-        daoUtil.free(  );
 
         return nKey;
     }
@@ -238,29 +238,28 @@ public final class LinkDAO implements ILinkDAO
      */
     public Collection<Link> selectList(  )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL );
-
-        daoUtil.executeQuery(  );
-
-        ArrayList<Link> list = new ArrayList<Link>(  );
-
-        while ( daoUtil.next(  ) )
-        {
-            Link link = new Link(  );
-            link.setId( daoUtil.getInt( 1 ) );
-            link.setName( daoUtil.getString( 2 ) );
-            link.setDescription( daoUtil.getString( 3 ) );
-            link.setDate( daoUtil.getDate( 4 ) );
-            link.setUrl( daoUtil.getString( 5 ) );
-            link.setImageContent( daoUtil.getBytes( 6 ) );
-            link.setWorkgroupKey( daoUtil.getString( 7 ) );
-            link.setMimeType( daoUtil.getString( 8 ) );
-            link.setOptionalUrls( this.selectUrlsList( daoUtil.getInt( 1 ) ) );
-
-            list.add( link );
+        ArrayList<Link> list = new ArrayList<>(  );
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL ) )
+        {    
+            daoUtil.executeQuery(  );
+    
+            while ( daoUtil.next(  ) )
+            {
+                Link link = new Link(  );
+                link.setId( daoUtil.getInt( 1 ) );
+                link.setName( daoUtil.getString( 2 ) );
+                link.setDescription( daoUtil.getString( 3 ) );
+                link.setDate( daoUtil.getDate( 4 ) );
+                link.setUrl( daoUtil.getString( 5 ) );
+                link.setImageContent( daoUtil.getBytes( 6 ) );
+                link.setWorkgroupKey( daoUtil.getString( 7 ) );
+                link.setMimeType( daoUtil.getString( 8 ) );
+                link.setOptionalUrls( this.selectUrlsList( daoUtil.getInt( 1 ) ) );
+    
+                list.add( link );
+            }
         }
-
-        daoUtil.free(  );
 
         return list;
     }
@@ -273,28 +272,29 @@ public final class LinkDAO implements ILinkDAO
      */
     public Collection<Link> selectByPortlet( int nIdPortlet )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_PORTLET );
-        daoUtil.setInt( 1, nIdPortlet );
-
-        daoUtil.executeQuery(  );
-
-        ArrayList<Link> list = new ArrayList<Link>(  );
-
-        while ( daoUtil.next(  ) )
+        ArrayList<Link> list = new ArrayList<>(  );
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_PORTLET ) )
         {
-            Link link = new Link(  );
-            link.setId( daoUtil.getInt( 1 ) );
-            link.setName( daoUtil.getString( 2 ) );
-            link.setUrl( daoUtil.getString( 3 ) );
-            link.setDescription( daoUtil.getString( 4 ) );
-            link.setImageContent( daoUtil.getBytes( 5 ) );
-            link.setWorkgroupKey( daoUtil.getString( 6 ) );
-            link.setMimeType( daoUtil.getString( 7 ) );
-            link.setOptionalUrls( this.selectUrlsList( daoUtil.getInt( 1 ) ) );
-            list.add( link );
-        }
+            daoUtil.setInt( 1, nIdPortlet );
+    
+            daoUtil.executeQuery(  );
+    
+            while ( daoUtil.next(  ) )
+            {
+                Link link = new Link(  );
+                link.setId( daoUtil.getInt( 1 ) );
+                link.setName( daoUtil.getString( 2 ) );
+                link.setUrl( daoUtil.getString( 3 ) );
+                link.setDescription( daoUtil.getString( 4 ) );
+                link.setImageContent( daoUtil.getBytes( 5 ) );
+                link.setWorkgroupKey( daoUtil.getString( 6 ) );
+                link.setMimeType( daoUtil.getString( 7 ) );
+                link.setOptionalUrls( this.selectUrlsList( daoUtil.getInt( 1 ) ) );
+                list.add( link );
+            }
 
-        daoUtil.free(  );
+        }
 
         return list;
     }
@@ -307,21 +307,19 @@ public final class LinkDAO implements ILinkDAO
      */
     private ReferenceList selectUrlsList( int idLink )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_URLS_LIST );
-
-        // get optional links
-        daoUtil.setInt( 1, idLink );
-
-        daoUtil.executeQuery(  );
-
         ReferenceList list = new ReferenceList(  );
-
-        while ( daoUtil.next(  ) )
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_URLS_LIST ) )
         {
-            list.addItem( daoUtil.getString( 1 ), daoUtil.getString( 2 ) );
+            // get optional links
+            daoUtil.setInt( 1, idLink );
+            daoUtil.executeQuery(  );
+    
+            while ( daoUtil.next(  ) )
+            {
+                list.addItem( daoUtil.getString( 1 ), daoUtil.getString( 2 ) );
+            }
         }
-
-        daoUtil.free(  );
 
         return list;
     }
@@ -334,18 +332,17 @@ public final class LinkDAO implements ILinkDAO
     private void insertUrlsList( Link link )
     {
         // optional links insertion
-        DAOUtil daoUtil = new DAOUtil( INSERT_URLS_SQL );
-
-        for ( ReferenceItem item : link.getOptionalUrls(  ) )
-        {
-            daoUtil.setInt( 1, link.getId(  ) );
-            daoUtil.setString( 2, item.getCode(  ) );
-            daoUtil.setString( 3, item.getName(  ) );
-
-            daoUtil.executeUpdate(  );
+        try( DAOUtil daoUtil = new DAOUtil( INSERT_URLS_SQL ) )
+        {    
+            for ( ReferenceItem item : link.getOptionalUrls(  ) )
+            {
+                daoUtil.setInt( 1, link.getId(  ) );
+                daoUtil.setString( 2, item.getCode(  ) );
+                daoUtil.setString( 3, item.getName(  ) );
+    
+                daoUtil.executeUpdate(  );
+            }
         }
-
-        daoUtil.free(  );
     }
 
     /* (non-Javadoc)
@@ -353,20 +350,20 @@ public final class LinkDAO implements ILinkDAO
          */
     public ImageResource loadImageResource( int nIdLink )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_RESOURCE_IMAGE );
-        daoUtil.setInt( 1, nIdLink );
-        daoUtil.executeQuery(  );
-
         ImageResource image = null;
-
-        if ( daoUtil.next(  ) )
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_RESOURCE_IMAGE ) )
         {
-            image = new ImageResource(  );
-            image.setImage( daoUtil.getBytes( 1 ) );
-            image.setMimeType( daoUtil.getString( 2 ) );
+            daoUtil.setInt( 1, nIdLink );
+            daoUtil.executeQuery(  );
+    
+            if ( daoUtil.next(  ) )
+            {
+                image = new ImageResource(  );
+                image.setImage( daoUtil.getBytes( 1 ) );
+                image.setMimeType( daoUtil.getString( 2 ) );
+            }
         }
-
-        daoUtil.free(  );
 
         return image;
     }

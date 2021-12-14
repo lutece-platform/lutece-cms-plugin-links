@@ -57,6 +57,10 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class LinksApp implements XPageApplication
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4031785213438754274L;
     ////////////////////////////////////////////////////////////////////////////
     // Constants
     private static final String PROPERTY_LINKS_PATHLABEL = "links.xPageLinks.pagePathLabel";
@@ -104,13 +108,13 @@ public class LinksApp implements XPageApplication
     {
         StringBuffer strBlocPortlet = new StringBuffer(  );
         Collection<Portlet> listePortlet = LinksPortletHome.getPortletsInLinksPage(  );
-        Collection<Link> listLinksForVhost = new ArrayList<Link>(  );
-        HashMap<String, Object> modelTemplateXpageLinks = new HashMap<String, Object>(  );
+        Collection<Link> listLinksForVhost = new ArrayList<>(  );
+        HashMap<String, Object> modelTemplateXpageLinks = new HashMap<>(  );
 
         for ( Portlet portlet : listePortlet )
         {
             int nPortletId = portlet.getId(  );
-            HashMap model = new HashMap(  );
+            HashMap<String, Object> model = new HashMap<>(  );
             Collection<Link> listLinks = LinkHome.findByPortlet( nPortletId );
 
             for ( Link link : listLinks )
@@ -124,7 +128,7 @@ public class LinksApp implements XPageApplication
                 }
             }
 
-            if ( listLinksForVhost.size(  ) > 0 )
+            if ( !listLinksForVhost.isEmpty( ) )
             {
                 model.put( MARK_LINKS_LIST, listLinksForVhost );
                 model.put( MARK_PORTLET_NAME, portlet.getName(  ) );

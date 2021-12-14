@@ -53,10 +53,9 @@ import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -67,6 +66,11 @@ public class LinksPortletJspBean extends PortletJspBean
 {
     ////////////////////////////////////////////////////////////////////////////
     // Constants
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3756390204133716455L;
 
     // Right
     public static final String RIGHT_MANAGE_ADMIN_SITE = "CORE_ADMIN_SITE";
@@ -136,7 +140,7 @@ public class LinksPortletJspBean extends PortletJspBean
         String strPortletId = request.getParameter( PARAMETER_PORTLET_ID );
         int nPortletId = Integer.parseInt( strPortletId );
         Portlet portlet = PortletHome.findByPrimaryKey( nPortletId );
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
+        HashMap<String, Object> model = new HashMap<>(  );
 
         // get links list
         model.put( MARK_LINKS_LIST, getLinksInPortletList( nPortletId ) );
@@ -268,10 +272,9 @@ public class LinksPortletJspBean extends PortletJspBean
      */
     private String getUnselectedLinks( int nPortletId )
     {
-        HashMap model = new HashMap(  );
+        HashMap<String, Serializable> model = new HashMap<>(  );
         ReferenceList ordersList = getNewLinkOrdersList( nPortletId );
 
-        //ReferenceList linksList = LinksPortletHome.getLinksList(  );
         ReferenceList linksList = new ReferenceList(  );
 
         Collection<Link> links = LinkHome.getLinksList(  );

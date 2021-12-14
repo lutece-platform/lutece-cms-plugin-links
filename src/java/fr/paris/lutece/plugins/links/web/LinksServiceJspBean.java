@@ -58,6 +58,11 @@ public class LinksServiceJspBean extends InsertServiceJspBean implements InsertS
     ////////////////////////////////////////////////////////////////////////////
     // Constants
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3410161495550026313L;
+
     // Templates
     private static final String TEMPLATE_SELECTOR_PAGE = "admin/plugins/links/links_selector.html";
 
@@ -90,7 +95,7 @@ public class LinksServiceJspBean extends InsertServiceJspBean implements InsertS
         AdminUser user = AdminUserService.getAdminUser( request );
 
         // Scan of the list
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
+        HashMap<String, Object> model = new HashMap<>(  );
         Collection<Link> listLinks = LinkHome.getLinksList(  );
         listLinks = AdminWorkgroupService.getAuthorizedCollection( listLinks, user );
 
