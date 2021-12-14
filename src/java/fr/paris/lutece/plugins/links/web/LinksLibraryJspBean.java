@@ -70,6 +70,10 @@ public class LinksLibraryJspBean extends PluginAdminPageJspBean
     ////////////////////////////////////////////////////////////////////////////////////
     // Constants
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 679961729642614958L;
     // Jsp
     private static final String JSP_LINKS_LIBRARY = "LinksLibrary.jsp";
     private static final String JSP_LINKS_PAGE = "ManageLinksPage.jsp";
@@ -255,19 +259,12 @@ public class LinksLibraryJspBean extends PluginAdminPageJspBean
 
         FileItem itemPicture = mRequest.getFile( PARAMETER_LINK_IMAGE );
 
-        //   if ( itemPicture != null )
-        //   {
         byte[] bytes = itemPicture.get(  );
         String strMimeType = itemPicture.getContentType(  );
 
         link.setImageContent( bytes );
         link.setMimeType( strMimeType );
-        /* }
-         else
-             {
-                 link.setImageContent( null );
-                 link.setMimeType( null );
-             }*/
+
         LinkHome.update( link );
 
         //getting link object in table
