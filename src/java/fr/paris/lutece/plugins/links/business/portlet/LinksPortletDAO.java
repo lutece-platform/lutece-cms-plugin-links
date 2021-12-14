@@ -98,14 +98,14 @@ public final class LinksPortletDAO implements ILinksPortletDAO
      */
     public void insertLink( int nPortletId, int nLinkId, int nOrder )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT );
-
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.setInt( 2, nLinkId );
-        daoUtil.setInt( 3, nOrder );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT ) )
+        {
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.setInt( 2, nLinkId );
+            daoUtil.setInt( 3, nOrder );
+    
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -116,13 +116,13 @@ public final class LinksPortletDAO implements ILinksPortletDAO
      */
     public void deleteLink( int nPortletId, int nLinkId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_LINK );
-
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.setInt( 2, nLinkId );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_LINK ) )
+        {
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.setInt( 2, nLinkId );
+    
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -131,15 +131,17 @@ public final class LinksPortletDAO implements ILinksPortletDAO
      */
     public void delete( int nPortletId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE );
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE ) )
+        {
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.executeUpdate(  );
+        }
 
-        daoUtil = new DAOUtil( SQL_QUERY_DELETE_LINK_PORTLET );
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_LINK_PORTLET ) )
+        {
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -150,17 +152,17 @@ public final class LinksPortletDAO implements ILinksPortletDAO
     public Portlet load( int nPortletId )
     {
         LinksPortlet portlet = new LinksPortlet(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT );
-
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeQuery(  );
-
-        if ( daoUtil.next(  ) )
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT ) )
         {
-            portlet.setId( daoUtil.getInt( 1 ) );
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.executeQuery(  );
+    
+            if ( daoUtil.next(  ) )
+            {
+                portlet.setId( daoUtil.getInt( 1 ) );
+            }
         }
-
-        daoUtil.free(  );
 
         return portlet;
     }
@@ -180,15 +182,16 @@ public final class LinksPortletDAO implements ILinksPortletDAO
     public ReferenceList selectLinksList(  )
     {
         ReferenceList list = new ReferenceList(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LINK );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LINK ) )
         {
-            list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) + " " + daoUtil.getString( 3 ) );
+            daoUtil.executeQuery(  );
+    
+            while ( daoUtil.next(  ) )
+            {
+                list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) + " " + daoUtil.getString( 3 ) );
+            }
         }
-
-        daoUtil.free(  );
 
         return list;
     }
@@ -202,14 +205,15 @@ public final class LinksPortletDAO implements ILinksPortletDAO
     public boolean testDuplicate( int nPortletId, int nLinkId )
     {
         boolean bResult;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ID_LINK );
-
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.setInt( 2, nLinkId );
-        daoUtil.executeQuery(  );
-
-        bResult = daoUtil.next(  );
-        daoUtil.free(  );
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ID_LINK ) )
+        {    
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.setInt( 2, nLinkId );
+            daoUtil.executeQuery(  );
+    
+            bResult = daoUtil.next(  );
+        }
 
         return bResult;
     }
@@ -222,27 +226,27 @@ public final class LinksPortletDAO implements ILinksPortletDAO
      */
     public Collection<Link> selectLinksInPortletList( int nPortletId )
     {
-        ArrayList<Link> list = new ArrayList<Link>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LINK_IN_PORTLET_LIST );
-
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
-        {
-            Link link = new Link(  );
-            link.setId( daoUtil.getInt( 1 ) );
-            link.setName( daoUtil.getString( 2 ) );
-            link.setUrl( daoUtil.getString( 3 ) );
-            link.setDescription( daoUtil.getString( 4 ) );
-            link.setImageContent( daoUtil.getBytes( 5 ) );
-            link.setMimeType( daoUtil.getString( 6 ) );
-            link.setWorkgroupKey( daoUtil.getString( 7 ) );
-            link.setOptionalUrls( this.selectUrlsList( link.getId(  ) ) );
-            list.add( link );
+        ArrayList<Link> list = new ArrayList<>(  );
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LINK_IN_PORTLET_LIST ) )
+        {    
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.executeQuery(  );
+    
+            while ( daoUtil.next(  ) )
+            {
+                Link link = new Link(  );
+                link.setId( daoUtil.getInt( 1 ) );
+                link.setName( daoUtil.getString( 2 ) );
+                link.setUrl( daoUtil.getString( 3 ) );
+                link.setDescription( daoUtil.getString( 4 ) );
+                link.setImageContent( daoUtil.getBytes( 5 ) );
+                link.setMimeType( daoUtil.getString( 6 ) );
+                link.setWorkgroupKey( daoUtil.getString( 7 ) );
+                link.setOptionalUrls( this.selectUrlsList( link.getId(  ) ) );
+                list.add( link );
+            }
         }
-
-        daoUtil.free(  );
 
         return list;
     }
@@ -257,17 +261,18 @@ public final class LinksPortletDAO implements ILinksPortletDAO
     public int selectLinkOrder( int nPortletId, int nLinkId )
     {
         int nOrder = 0;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LINK_ORDER );
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.setInt( 2, nLinkId );
-        daoUtil.executeQuery(  );
-
-        if ( daoUtil.next(  ) )
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LINK_ORDER ) )
         {
-            nOrder = daoUtil.getInt( 1 );
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.setInt( 2, nLinkId );
+            daoUtil.executeQuery(  );
+    
+            if ( daoUtil.next(  ) )
+            {
+                nOrder = daoUtil.getInt( 1 );
+            }
         }
-
-        daoUtil.free(  );
 
         return nOrder;
     }
@@ -280,16 +285,17 @@ public final class LinksPortletDAO implements ILinksPortletDAO
     public int selectMaxOrder( int nPortletId )
     {
         int nOrder = 0;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_MAX_ORDER );
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeQuery(  );
-
-        if ( daoUtil.next(  ) )
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_MAX_ORDER ) )
         {
-            nOrder = daoUtil.getInt( 1 );
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.executeQuery(  );
+    
+            if ( daoUtil.next(  ) )
+            {
+                nOrder = daoUtil.getInt( 1 );
+            }
         }
-
-        daoUtil.free(  );
 
         return nOrder;
     }
@@ -301,15 +307,16 @@ public final class LinksPortletDAO implements ILinksPortletDAO
     public int selectPortletMaxOrder(  )
     {
         int nOrder = 0;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_PORTLET_MAX_ORDER );
-        daoUtil.executeQuery(  );
-
-        if ( daoUtil.next(  ) )
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_PORTLET_MAX_ORDER ) )
         {
-            nOrder = daoUtil.getInt( 1 );
+            daoUtil.executeQuery(  );
+    
+            if ( daoUtil.next(  ) )
+            {
+                nOrder = daoUtil.getInt( 1 );
+            }
         }
-
-        daoUtil.free(  );
 
         return nOrder;
     }
@@ -323,15 +330,14 @@ public final class LinksPortletDAO implements ILinksPortletDAO
      */
     public void storeLinkOrder( int nOrder, int nPortletId, int nLinkId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE_LINK_ORDER );
-
-        daoUtil.setInt( 1, nOrder );
-        daoUtil.setInt( 2, nPortletId );
-        daoUtil.setInt( 3, nLinkId );
-
-        daoUtil.executeUpdate(  );
-
-        daoUtil.free(  );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE_LINK_ORDER ) )
+        {
+            daoUtil.setInt( 1, nOrder );
+            daoUtil.setInt( 2, nPortletId );
+            daoUtil.setInt( 3, nLinkId );
+    
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -343,18 +349,18 @@ public final class LinksPortletDAO implements ILinksPortletDAO
     public int selectLinkIdByOrder( int nPortletId, int nOrder )
     {
         int nResult = 0;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LINK_ID_BY_ORDER );
-
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.setInt( 2, nOrder );
-        daoUtil.executeQuery(  );
-
-        if ( daoUtil.next(  ) )
-        {
-            nResult = daoUtil.getInt( 1 );
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_LINK_ID_BY_ORDER ) )
+        {    
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.setInt( 2, nOrder );
+            daoUtil.executeQuery(  );
+    
+            if ( daoUtil.next(  ) )
+            {
+                nResult = daoUtil.getInt( 1 );
+            }
         }
-
-        daoUtil.free(  );
 
         return nResult;
     }
@@ -366,18 +372,18 @@ public final class LinksPortletDAO implements ILinksPortletDAO
     public ReferenceList findUnselectedPortlets(  )
     {
         ReferenceList list = new ReferenceList(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_UNSELECTED_PORTLET );
-        String strPortletTypeId = LinksPortletHome.getInstance(  ).getPortletTypeId(  );
-
-        daoUtil.setString( 1, strPortletTypeId );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_UNSELECTED_PORTLET ) )
         {
-            list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
+            String strPortletTypeId = LinksPortletHome.getInstance(  ).getPortletTypeId(  );
+    
+            daoUtil.setString( 1, strPortletTypeId );
+            daoUtil.executeQuery(  );
+    
+            while ( daoUtil.next(  ) )
+            {
+                list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
+            }
         }
-
-        daoUtil.free(  );
 
         return list;
     }
@@ -389,20 +395,20 @@ public final class LinksPortletDAO implements ILinksPortletDAO
      */
     public Collection<Portlet> selectPortletsInLinksPage(  )
     {
-        ArrayList<Portlet> list = new ArrayList<Portlet>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_PORTLET_LINK_PAGE );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        ArrayList<Portlet> list = new ArrayList<>(  );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_PORTLET_LINK_PAGE ) )
         {
-            LinksPortlet portlet = new LinksPortlet(  );
-            portlet.setId( daoUtil.getInt( 1 ) );
-            portlet.setPortletOrder( daoUtil.getInt( 2 ) );
-            portlet.setName( daoUtil.getString( 3 ) );
-            list.add( portlet );
+            daoUtil.executeQuery(  );
+    
+            while ( daoUtil.next(  ) )
+            {
+                LinksPortlet portlet = new LinksPortlet(  );
+                portlet.setId( daoUtil.getInt( 1 ) );
+                portlet.setPortletOrder( daoUtil.getInt( 2 ) );
+                portlet.setName( daoUtil.getString( 3 ) );
+                list.add( portlet );
+            }
         }
-
-        daoUtil.free(  );
 
         return list;
     }
@@ -415,17 +421,17 @@ public final class LinksPortletDAO implements ILinksPortletDAO
     public int selectPortletOrder( int nPortletId )
     {
         int nOrder = 0;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_PORTLET_LINK_ORDER );
-
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeQuery(  );
-
-        if ( daoUtil.next(  ) )
-        {
-            nOrder = daoUtil.getInt( 1 );
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_PORTLET_LINK_ORDER ) )
+        {    
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.executeQuery(  );
+    
+            if ( daoUtil.next(  ) )
+            {
+                nOrder = daoUtil.getInt( 1 );
+            }
         }
-
-        daoUtil.free(  );
 
         return nOrder;
     }
@@ -436,11 +442,11 @@ public final class LinksPortletDAO implements ILinksPortletDAO
      */
     public void removePortlet( int nPortletId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_PORTLET );
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeUpdate(  );
-
-        daoUtil.free(  );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_PORTLET ) )
+        {
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -449,11 +455,11 @@ public final class LinksPortletDAO implements ILinksPortletDAO
      */
     public void removeLinkFromPortlets( int nLinkId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_LINK_FROM_PORTLET );
-        daoUtil.setInt( 1, nLinkId );
-        daoUtil.executeUpdate(  );
-
-        daoUtil.free(  );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_LINK_FROM_PORTLET ) )
+        {
+            daoUtil.setInt( 1, nLinkId );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -463,12 +469,12 @@ public final class LinksPortletDAO implements ILinksPortletDAO
      */
     public void insertPortlet( int nPortletId, int nOrder )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_INTO_PORTLET );
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.setInt( 2, nOrder );
-        daoUtil.executeUpdate(  );
-
-        daoUtil.free(  );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_INTO_PORTLET ) )
+        {
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.setInt( 2, nOrder );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -479,16 +485,17 @@ public final class LinksPortletDAO implements ILinksPortletDAO
     public int selectPortletIdByOrder( int nOrder )
     {
         int nResult = 0;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_PORTLET_ID );
-        daoUtil.setInt( 1, nOrder );
-        daoUtil.executeQuery(  );
-
-        if ( daoUtil.next(  ) )
+        
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_PORTLET_ID ) )
         {
-            nResult = daoUtil.getInt( 1 );
+            daoUtil.setInt( 1, nOrder );
+            daoUtil.executeQuery(  );
+    
+            if ( daoUtil.next(  ) )
+            {
+                nResult = daoUtil.getInt( 1 );
+            }
         }
-
-        daoUtil.free(  );
 
         return nResult;
     }
@@ -501,12 +508,12 @@ public final class LinksPortletDAO implements ILinksPortletDAO
      */
     public void storePortletOrder( int nOrder, int nPortletId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE_PORTLET_LINK );
-        daoUtil.setInt( 1, nOrder );
-        daoUtil.setInt( 2, nPortletId );
-        daoUtil.executeUpdate(  );
-
-        daoUtil.free(  );
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE_PORTLET_LINK ) )
+        {
+            daoUtil.setInt( 1, nOrder );
+            daoUtil.setInt( 2, nPortletId );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -518,16 +525,16 @@ public final class LinksPortletDAO implements ILinksPortletDAO
     private ReferenceList selectUrlsList( int idLink )
     {
         ReferenceList list = new ReferenceList(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_URL_LIST );
-        daoUtil.setInt( 1, idLink );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_URL_LIST ) )
         {
-            list.addItem( daoUtil.getString( 1 ), daoUtil.getString( 2 ) );
+            daoUtil.setInt( 1, idLink );
+            daoUtil.executeQuery(  );
+    
+            while ( daoUtil.next(  ) )
+            {
+                list.addItem( daoUtil.getString( 1 ), daoUtil.getString( 2 ) );
+            }
         }
-
-        daoUtil.free(  );
 
         return list;
     }
