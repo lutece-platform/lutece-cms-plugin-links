@@ -6,7 +6,7 @@
 				<@tform enctype='multipart/form-data' method='post' action='jsp/admin/plugins/links/DoCreateLink.jsp'>
 					<@input type='hidden' name='link_id' value='@link_id@' />
 					<@formGroup labelFor='link_name' labelKey='#i18n{links.create_link.name}' mandatory=true>
-						<@input type='text' name='link_name' id='link_name' inputSsize=60 maxlength=200 />
+						<@input type='text' name='link_name' id='link_name' maxlength=200 />
 					</@formGroup>
 					
 					<#if url_default?has_content >
@@ -15,7 +15,7 @@
 						<#assign labelKey = '#i18n{links.create_link.title}' />
 					</#if>
 					<@formGroup labelFor='link_url' labelKey=labelKey mandatory=true>
-						<@input type='text' name='link_url' id='link_url' inputSize=60 />
+						<@input type='text' name='link_url' id='link_url' />
 					</@formGroup>
 					
 					<#if alternate_urls_list?has_content >
@@ -41,13 +41,13 @@
 						<@input type='textarea' name='link_description' id='link_description' rows=3 cols=45 />
 					</@formGroup>
 					<@formGroup labelFor='link_image' labelKey='#i18n{links.create_link.picture}'>
-						<@input type='file' name='link_image' id='link_image' inputSize=60 />
+						<@input type='file' name='link_image' id='link_image' />
 					</@formGroup>
 					<@formGroup labelFor='link_workgroup' labelKey='#i18n{links.create_link.workgroup}'>
 						<@select name='workgroupKey' default_value='' items=workgroups_list />
 					</@formGroup>
 					<@formGroup>
-						<@button type='submit' value='#i18n{links.create_link.submit}' title='#i18n{links.create_link.submit}' />
+						<@button type='submit' value='#i18n{links.create_link.submit}' title='#i18n{links.create_link.submit}' buttonIcon='save' />
 					</@formGroup>
 				</@tform>
 			</@boxBody>

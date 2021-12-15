@@ -5,25 +5,25 @@
 			<@boxBody>
 
 				<@tform name='formModifyLink' enctype='multipart/form-data' method='post' action=''>
-					<@input type='hidden' name='link_id' value='${link.id}' />
+					<@input type='hidden' name='link_id' value='${.data_model.link.id}' />
 					
 					<@formGroup labelFor='link_name' labelKey='#i18n{links.modify_link.name}' mandatory=true>
-						<@input type='text' name='link_name' id='link_name' inputSize=60 maxlength=200 value='${link.name}' />
+						<@input type='text' name='link_name' id='link_name' maxlength=200 value='${.data_model.link.name}' />
 					</@formGroup>
 					
 					<@formGroup labelFor='link_url' labelKey='${url_default}' mandatory=true>
-						<@input type='text' name='link_url' id='link_url' inputSize=60 value='${link.url}' />
+						<@input type='text' name='link_url' id='link_url' value='${.data_model.link.url}' />
 					</@formGroup>
 					
 					<#if alternate_urls_list?has_content>
 						<#list alternate_urls_list as alternate_url>
 							<#assign url = ''>
 							<#assign urlTextDisabled = false>
-							<#if link.optionalUrls?has_content>
-								<#list link.optionalUrls as optUrl >
+							<#if .data_model.link.optionalUrls?has_content>
+								<#list .data_model.link.optionalUrls as optUrl>
 									<#if optUrl.code == alternate_url.code>
 										<#assign url=optUrl.name>
-										<#if optUrl.name == link.url>
+										<#if optUrl.name == .data_model.link.url>
 											<#assign urlTextDisabled = true />
 										</#if>
 									</#if>
@@ -44,7 +44,7 @@
 								
 								<@input type='text' name='${alternate_url.code}_url' inputSize=60 maxlength=150 value='${url}' disabled=urlTextDisabled />
 								
-								<@radioButton labelFor='${alternate_url.code}_2' labelKey='#i18n{links.create_link.defaultUrl}' id='${alternate_url.code}_2' name='${alternate_url.code}_type' value='2' params='onclick="form.${alternate_url.code}_url.disabled=true; form.${alternate_url.code}_url.value=form.link_url.value"' checked=(url == link.url) />
+								<@radioButton labelFor='${alternate_url.code}_2' labelKey='#i18n{links.create_link.defaultUrl}' id='${alternate_url.code}_2' name='${alternate_url.code}_type' value='2' params='onclick="form.${alternate_url.code}_url.disabled=true; form.${alternate_url.code}_url.value=form.link_url.value"' checked=(url == .data_model.link.url) />
 								
 								<@radioButton labelFor='${alternate_url.code}_3' labelKey='#i18n{links.create_link.undef}' id='${alternate_url.code}_3' name='${alternate_url.code}_type' value='3' params='onclick="form.${alternate_url.code}_url.disabled=true; form.${alternate_url.code}_url.value=\'\'"' checked=(url?has_content == false) />
 							</@formGroup>
@@ -52,15 +52,15 @@
 					</#if>
 					
 					<@formGroup labelFor='link_description' labelKey='#i18n{links.modify_link.description}'>
-						<@input type='textarea' name='link_description' id='link_description' rows=3 cols=45>${link.description}</@input>
+						<@input type='textarea' name='link_description' id='link_description' rows=3 cols=45>${.data_model.link.description}</@input>
 					</@formGroup>
 					
 					<@formGroup labelKey='#i18n{links.modify_link.currentPicture}'>
 						<@link href='javascript:history.go(0)'>#i18n{links.modify_link.update}</@link>
-						<img src="${link.imagePath}" width="50" height="50" border="0" />
+						<img src="${.data_model.link.imagePath}" width="50" height="50" border="0" />
 					</@formGroup>
 					
-					<@formGroup labelFor='link_image' labelKey='#i18n{links.modify_link.picture}' mandatory=true>
+					<@formGroup labelFor='link_image' labelKey='#i18n{links.modify_link.picture}'>
 						<@inputGroup>
 							<@input type='file' name='link_image' id='link_image' inputSize=60 />
 							<@inputGroupItem>
@@ -70,12 +70,12 @@
 					</@formGroup>
 					
 					<@formGroup labelFor='link_workgroup' labelKey='#i18n{links.create_link.workgroup}'>
-						<@select name='workgroupKey' default_value='${link.workgroupKey}' items=workgroups_list />
+						<@select name='workgroupKey' default_value='${.data_model.link.workgroupKey}' items=workgroups_list />
 					</@formGroup>
 					
 					<@formGroup>
-						<@button type='button' title='#i18n{links.modify_link.modify}' params='onclick="document.formModifyLink.action='jsp/admin/plugins/links/DoModifyLink.jsp';"' />
-						<@button type='button' title='#i18n{links.modify_link.remove}' params='onclick="document.formModifyLink.action=\'jsp/admin/plugins/links/RemoveLink.jsp\';"' />
+						<@button type='submit' title='#i18n{links.modify_link.modify}' params='onclick="document.formModifyLink.action=\'jsp/admin/plugins/links/DoModifyLink.jsp\';"' buttonIcon='save' />
+						<@button type='submit' title='#i18n{links.modify_link.remove}' params='onclick="document.formModifyLink.action=\'jsp/admin/plugins/links/RemoveLink.jsp\';"' buttonIcon='times' color='danger' />
 					</@formGroup>
 				</@tform>
 			</@boxBody>

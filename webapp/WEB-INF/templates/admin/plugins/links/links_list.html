@@ -11,37 +11,36 @@
 						<@th xs=2>#i18n{links.links_list.columnDate}</@th>
 						<@th xs=2>#i18n{links.links_list.columnPicture}</@th>
 					</@tr>
-					<#list links_list?sort_by('name') as link>
+					<#list links_list?sort_by('name') as thelink>
 					<@tr>
-						<@td align='left' xs=2>
-							&nbsp;<img src="images/admin/skin/bullet.gif" border="0" />
-							<@link href='jsp/admin/plugins/links/ModifyLink.jsp?link_id=${link.id}' class='admin-menu'>${link.name}</@link>
+						<@td xs=2>
+							<@link href='jsp/admin/plugins/links/ModifyLink.jsp?link_id=${thelink.id}' class='admin-menu'>${thelink.name}</@link>
 						</@td>
-						<@td align='left' xs=3>
-							<@link href='${link.url}' target='_blank' class='admin-menu'>${link.url}</@link> <#if url_default?has_content>(${url_default})</#if>
-							<#if link.optionalUrls?has_content >
-							<#list link.optionalUrls as optUrl >
+						<@td xs=3>
+							<@link href='${thelink.url}' target='_blank' class='admin-menu'>${thelink.url}</@link> <#if url_default?has_content>(${url_default})</#if>
+							<#if thelink.optionalUrls?has_content >
+							<#list thelink.optionalUrls as optUrl >
 							<br />
 							<@link href='${optUrl.name}' target='_blank' class='admin-menu'>${optUrl.name}</@link> (${optUrl.code})
 							</#list>
 							</#if>
 						</@td>
-						<@td align='left' xs=3>
-							&nbsp;${link.description}
+						<@td xs=3>
+							&nbsp;${thelink.description}
 						</@td>
-						<@td align='center' xs=2>
-							${link.date}
+						<@td xs=2>
+							${thelink.date}
 						</@td>
-						<@td align='center' xs=2>
-							<img src="${link.imagePath}" width="30" height="30" />
+						<@td xs=2>
+							<img src="${thelink.imagePath}" width="30" height="30" />
 						</@td>
 					</@tr>
-					</#list >
+					</#list>
 				</@table>
 				
 				<@tform name='formLinksList' method='post' action=''>
-					<@button type='button' value='#i18n{links.links_list.buttonAddLink}' params='onclick="document.formLinksList.action=\'jsp/admin/plugins/links/CreateLinks.jsp\';"' />
-					<@button type='button' value='#i18n{links.links_list.buttonManagePage}' params='onclick="document.formLinksList.action=\'jsp/admin/plugins/links/ManageLinksPage.jsp\';"' />
+					<@button type='submit' title='#i18n{links.links_list.buttonAddLink}' params='onclick="document.formLinksList.action=\'jsp/admin/plugins/links/CreateLinks.jsp\';"' />
+					<@button type='submit' title='#i18n{links.links_list.buttonManagePage}' params='onclick="document.formLinksList.action=\'jsp/admin/plugins/links/ManageLinksPage.jsp\';"' />
 				</@tform>
 			</@boxBody>
 		</@box>
