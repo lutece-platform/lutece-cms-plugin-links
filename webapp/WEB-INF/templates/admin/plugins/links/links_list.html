@@ -1,47 +1,49 @@
-<div class="content-box" >
-    <h2>#i18n{links.links_list.tableLabel}</h2>
-    
-    
-    <table>
-        <tr>
-            <th width="20%">#i18n{links.links_list.columnName}</th>
-            <th width="25%">#i18n{links.links_list.columnUrl}</th>
-            <th width="25%">#i18n{links.links_list.columnDescription}</th>
-            <th width="15%">#i18n{links.links_list.columnDate}</th>
-            <th width="15%" >#i18n{links.links_list.columnPicture}</th>
-        </tr>
-        <#list links_list?sort_by('name') as link >
-        <tr>
-            <td align="left" width="20%">
-                &nbsp;<img src="images/admin/skin/bullet.gif" border="0" />
-                <a href="jsp/admin/plugins/links/ModifyLink.jsp?link_id=${link.id}" class="admin-menu">${link.name}</a>
-            </td>
-            <td align="left" width="30%">
-                <a href="${link.url}" target="_blank" class="admin-menu">${link.url}</a> <#if url_default?has_content >(${url_default})</#if>
-                <#if link.optionalUrls?has_content >
-                <#list link.optionalUrls as optUrl >
-                <br />
-                <a href="${optUrl.name}" target="_blank" class="admin-menu">${optUrl.name}</a> (${optUrl.code})
-                </#list>
-                </#if>
-            </td>
-            <td align="left" width="30%">
-                &nbsp;${link.description}
-            </td>
-            <td align="center" width="10%">
-                ${link.date}
-            </td>
-            <td align="center" width="10%">
-                <img src="${link.imagePath}" width="30" height="30" />
-            </td>
-        </tr>
-        </#list >
-    </table>
-    
-    <p>
-        <form name="formLinksList" method="post" action="">
-            <input type="submit" value="#i18n{links.links_list.buttonAddLink}" class="button" onclick="document.formLinksList.action='jsp/admin/plugins/links/CreateLinks.jsp';" />
-            <input type="submit" value="#i18n{links.links_list.buttonManagePage}" class="button" onclick="document.formLinksList.action='jsp/admin/plugins/links/ManageLinksPage.jsp';" />
-        </form>
-    </p>
-</div>
+<@row>
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{links.links_list.tableLabel}' />
+			<@boxBody>
+				<@table>
+					<@tr>
+						<@th xs=2>#i18n{links.links_list.columnName}</@th>
+						<@th xs=3>#i18n{links.links_list.columnUrl}</@th>
+						<@th xs=3>#i18n{links.links_list.columnDescription}</@th>
+						<@th xs=2>#i18n{links.links_list.columnDate}</@th>
+						<@th xs=2>#i18n{links.links_list.columnPicture}</@th>
+					</@tr>
+					<#list links_list?sort_by('name') as link>
+					<@tr>
+						<@td align='left' xs=2>
+							&nbsp;<img src="images/admin/skin/bullet.gif" border="0" />
+							<@link href='jsp/admin/plugins/links/ModifyLink.jsp?link_id=${link.id}' class='admin-menu'>${link.name}</@link>
+						</@td>
+						<@td align='left' xs=3>
+							<@link href='${link.url}' target='_blank' class='admin-menu'>${link.url}</@link> <#if url_default?has_content>(${url_default})</#if>
+							<#if link.optionalUrls?has_content >
+							<#list link.optionalUrls as optUrl >
+							<br />
+							<@link href='${optUrl.name}' target='_blank' class='admin-menu'>${optUrl.name}</@link> (${optUrl.code})
+							</#list>
+							</#if>
+						</@td>
+						<@td align='left' xs=3>
+							&nbsp;${link.description}
+						</@td>
+						<@td align='center' xs=2>
+							${link.date}
+						</@td>
+						<@td align='center' xs=2>
+							<img src="${link.imagePath}" width="30" height="30" />
+						</@td>
+					</@tr>
+					</#list >
+				</@table>
+				
+				<@tform name='formLinksList' method='post' action=''>
+					<@button type='button' value='#i18n{links.links_list.buttonAddLink}' params='onclick="document.formLinksList.action=\'jsp/admin/plugins/links/CreateLinks.jsp\';"' />
+					<@button type='button' value='#i18n{links.links_list.buttonManagePage}' params='onclick="document.formLinksList.action=\'jsp/admin/plugins/links/ManageLinksPage.jsp\';"' />
+				</@tform>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>

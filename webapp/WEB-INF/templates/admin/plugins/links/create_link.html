@@ -1,49 +1,56 @@
-<div class="content-box" >
-    <h2>#i18n{links.create_link.tableLabel}</h2>
-	<form enctype="multipart/form-data" method="post" action="jsp/admin/plugins/links/DoCreateLink.jsp">
-		<input type="hidden" name="link_id" value="@link_id@" />
-		<p>
-			<label for="link_name">#i18n{links.create_link.name} * :</label>
-			<input type="text" name="link_name" id="link_name" size="60" maxlength="200" />
-		</p>
-			<p>
-				<label for="link_url">
-				<#if url_default?has_content >
-					${url_default}
-				<#else>
-					#i18n{links.create_link.title}
-				</#if>
-				 * :</label>
-				<input type="text" name="link_url" id="link_url" size="60" />
-			</p>
-		<#if alternate_urls_list?has_content >
-			<#list alternate_urls_list as alternate_url >
-				<p>
-					<label for="${alternate_url.code}_1"><#if alternate_url.name?has_content >${alternate_url.name}</#if > * :</label>
-					<input class="radio" type="radio" onclick="form.${alternate_url.code}_url.disabled=false;"  id="${alternate_url.code}_1" name="${alternate_url.code}_type" value="1" checked="checked" />
-					<input class="radio" type="text" name="${alternate_url.code}_url" size="60" maxlength="150" value="" />
-					<input class="radio" type="radio" onclick="form.${alternate_url.code}_url.disabled=true; form.${alternate_url.code}_url.value=form.link_url.value" id="${alternate_url.code}_2" name="${alternate_url.code}_type" value="2" />
-					#i18n{links.create_link.defaultUrl}
-					<input class="radio" type="radio" onclick="form.${alternate_url.code}_url.disabled=true; form.${alternate_url.code}_url.value=''" id="${alternate_url.code}_3" name="${alternate_url.code}_type" value="3" />
-					#i18n{links.create_link.undef}
-				</p>
-			</#list>
-		</#if >
-		<p>
-			<label for="link_description">#i18n{links.create_link.description} :</label>
-			<textarea  name="link_description" id="link_description" rows="3" cols="45"></textarea>
-		</p>
-		<p>
-			<label for="link_image">#i18n{links.create_link.picture} :</label>
-			<input type="file" name="link_image" id="link_image" size="60"/>
-		</p>
-		<p>
-           	<label for="link_workgroup" >#i18n{links.create_link.workgroup} :</label>
-           	<@combo name="workgroupKey" default_value="" items=workgroups_list />
-        </p>
-		<p>
-			<input type="submit" value="#i18n{links.create_link.submit}" class="button" />
-		</p>
-	</form>
-
-</div>
+<@row>
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{links.create_link.tableLabel}' />
+			<@boxBody>
+				<@tform enctype='multipart/form-data' method='post' action='jsp/admin/plugins/links/DoCreateLink.jsp'>
+					<@input type='hidden' name='link_id' value='@link_id@' />
+					<@formGroup labelFor='link_name' labelKey='#i18n{links.create_link.name}' mandatory=true>
+						<@input type='text' name='link_name' id='link_name' inputSsize=60 maxlength=200 />
+					</@formGroup>
+					
+					<#if url_default?has_content >
+						<#assign labelKey = url_default />
+					<#else>
+						<#assign labelKey = '#i18n{links.create_link.title}' />
+					</#if>
+					<@formGroup labelFor='link_url' labelKey=labelKey mandatory=true>
+						<@input type='text' name='link_url' id='link_url' inputSize=60 />
+					</@formGroup>
+					
+					<#if alternate_urls_list?has_content >
+						<#list alternate_urls_list as alternate_url>
+						
+							<#if alternate_url.name?has_content>
+								<#assign labelKey = alternate_url.name />
+							<#else>
+								<#assign labelKey = '' />
+							</#if >
+							<@formGroup labelKey='${alternate_url.name}' mandatory=true>
+								<@radioButton labelFor='${alternate_url.code}_1' labelKey=labelKey params='onclick="form.${alternate_url.code}_url.disabled=false;"'  id='${alternate_url.code}_1' name='${alternate_url.code}_type' value='1' checked=true />
+								
+								<@input type='text' name='${alternate_url.code}_url' inputSize=60 maxlength=150 value='' />
+								
+								<@radioButton id='${alternate_url.code}_2' name='${alternate_url.code}_type' labelKey='#i18n{links.create_link.defaultUrl}' value ='2' params='onclick="form.${alternate_url.code}_url.disabled=true; form.${alternate_url.code}_url.value=form.link_url.value"' />
+								
+								<@radioButton id='${alternate_url.code}_3' name='${alternate_url.code}_type' labelKey='#i18n{links.create_link.undef}' value ='3' params='onclick="form.${alternate_url.code}_url.disabled=true; form.${alternate_url.code}_url.value=\'\'"' />
+							</@formGroup>
+						</#list>
+					</#if>
+					<@formGroup labelFor='link_description' labelKey='#i18n{links.create_link.description}'>
+						<@input type='textarea' name='link_description' id='link_description' rows=3 cols=45 />
+					</@formGroup>
+					<@formGroup labelFor='link_image' labelKey='#i18n{links.create_link.picture}'>
+						<@input type='file' name='link_image' id='link_image' inputSize=60 />
+					</@formGroup>
+					<@formGroup labelFor='link_workgroup' labelKey='#i18n{links.create_link.workgroup}'>
+						<@select name='workgroupKey' default_value='' items=workgroups_list />
+					</@formGroup>
+					<@formGroup>
+						<@button type='submit' value='#i18n{links.create_link.submit}' title='#i18n{links.create_link.submit}' />
+					</@formGroup>
+				</@tform>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>

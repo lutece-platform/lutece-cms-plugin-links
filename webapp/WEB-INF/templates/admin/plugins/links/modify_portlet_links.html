@@ -1,17 +1,23 @@
 </div>
 </form>
-<div class="content-box" >
-    <h2>#i18n{links.modify_portlet_links.tableLabel}</h2>
-	<table>
-		<tr>
-	 		<th>#i18n{links.modify_portlet_links.name}</th>
-			<th>#i18n{links.modify_portlet_links.url}</th>
-			<th>#i18n{links.modify_portlet_links.picture}</th>
-			<th>#i18n{links.modify_portlet_links.row}</th>
-			<th>#i18n{links.modify_portlet_links.delete}</th>
-		</tr>
-		${links_list}
-	 </table>
-</div>
 
-${unselected_links}
+<@row>
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{links.modify_portlet_links.tableLabel}' />
+			<@boxBody>
+				<@table>
+					<@tr>
+						<@th>#i18n{links.modify_portlet_links.name}</@th>
+						<@th>#i18n{links.modify_portlet_links.url}</@th>
+						<@th>#i18n{links.modify_portlet_links.picture}</@th>
+						<@th>#i18n{links.modify_portlet_links.row}</@th>
+						<@th>#i18n{links.modify_portlet_links.delete}</@th>
+					</@tr>
+					${links_list}
+				 </@table>
+				 ${unselected_links}
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>

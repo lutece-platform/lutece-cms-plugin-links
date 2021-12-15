@@ -1,26 +1,32 @@
 <!-- begin unselected_links -->
-<div class="content-box" >
-	<h2>#i18n{links.unselected_links.insertNewLink}</h2>
-	<#if links_list?has_content>
-	<form name="selectLinks" method="post" action="plugins/links/DoSelectLinks.jsp" >	
-	<input type="hidden" name="portlet_id" value="${portlet_id}" />
-	<table>
-		<tr>
-			<td>
-				<@combo name="links" default_value="${default_link}" items=links_list />
-			</td>
-			<td>
-				#i18n{links.unselected_links.row} :
-				<@combo name="links_order" default_value="${default_order}" items=order_list />
-			</td>
-			<td>
-				<input type ="submit" value="#i18n{links.unselected_links.add}" class="button" />
-			</td>
-		</tr>
-	</table>
-	</form>
-	<#else>
-		#i18n{links.unselected_links.noLink}
-	</#if>
-</div>
+<@row>
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{links.unselected_links.insertNewLink}' />
+			<@boxBody>
+				<#if links_list?has_content>
+				<@tform name='selectLinks' method='post' action='plugins/links/DoSelectLinks.jsp'>	
+					<@input type='hidden' name='portlet_id' value='${portlet_id}' />
+					<@table>
+						<@tr>
+							<@td>
+								<@select name='links' default_value='${default_link}' items=links_list />
+							</@td>
+							<@td>
+								#i18n{links.unselected_links.row} :
+								<@select name='links_order' default_value='${default_order}' items=order_list />
+							</@td>
+							<@td>
+								<@button type='submit' value='#i18n{links.unselected_links.add}' title='#i18n{links.unselected_links.add}' hideTitle=['all'] size='sm' />
+							</@td>
+						</@tr>
+					</@table>
+				</@tform>
+				<#else>
+					#i18n{links.unselected_links.noLink}
+				</#if>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>
 <!-- end unselected_links -->
