@@ -8,7 +8,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>plugin-links</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>2.0.9-SNAPSHOT</version>
+    <version>2.0.9</version>
     <name>Lutece links plugin</name>
     <repositories>
         <repository>
@@ -35,5 +35,6 @@
         <connection>scm:git:https://github.com/lutece-platform/lutece-cms-plugin-links.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-platform/lutece-cms-plugin-links.git</developerConnection>
         <url>https://github.com/lutece-platform/lutece-cms-plugin-links.git</url>
-    </scm>
+      <tag>plugin-links-2.0.9</tag>
+  </scm>
 </project>
